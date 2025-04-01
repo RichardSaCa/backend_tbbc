@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 
-# modelar tablas de la base de datos
+# modelar tabla de la base de datos
 
 class User(BaseModel):
     id: int

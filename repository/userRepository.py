@@ -5,7 +5,7 @@ from models.userModel import User,UpdateUser,createUser,Users
 import os
 from dotenv import load_dotenv
 
-#El repositorio me permite la comunicación con la base de datos
+#El repositorio es el único que me permite la comunicación con la base de datos
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -29,15 +29,15 @@ def get_db_connection():
     except Error as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
 
+#método para registrar un usuario
 async def register_user(user: createUser):
     connection = get_db_connection()
     cursor = connection.cursor()
-    # SQL para insertar la fruta en la tabla
+    # SQL para insertar el user en la tabla
     insert_query = """
         INSERT INTO users (name,phone,email)
         VALUES (%s,%s,%s)
     """
-
     try:
         # Ejecutar la consulta de inserción
         cursor.execute(insert_query, (user.name,user.phone,user.email))
@@ -50,11 +50,12 @@ async def register_user(user: createUser):
         cursor.close()
         connection.close()
         
+#método para obtener todos los users
 async def get_users():
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    # SQL para obtener todas los user registrados
+    # SQL para obtener todos los user registrados y organizar alfabéticamente
     select_query = "SELECT u.id as id, u.name as name, u.phone as phone, u.email as email FROM users u order by u.name asc"
     
     try:
@@ -62,7 +63,7 @@ async def get_users():
         cursor.execute(select_query)
         users = cursor.fetchall()  # Obtener todos los resultados
 
-        # Convertir el resultado a una lista de diccionarios
+        # Convertir el resultado a una lista
         user_list = [User(id=row[0], name=row[1], phone=row[2], email=row[3]) for row in users]
         
         return Users(users=user_list)
@@ -99,7 +100,7 @@ async def update_user(user_id: int, update: UpdateUser):
         cursor.close()
         connection.close()  
         
-        
+#método para eliminar un usuario       
 async def delete_user(user_id: int):
     connection = get_db_connection()
     cursor = connection.cursor()
