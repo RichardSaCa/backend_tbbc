@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 #importar modelos
 from models.userModel import User,UpdateUser,createUser,Users
 #importar servicios
-from services.userService import register_user_service, get_users_service
+from services.userService import register_user_service, get_users_service, update_user_service
     
 
 app = FastAPI(debug=True)
@@ -32,6 +32,11 @@ async def fun_register_user(user: createUser):
 async def fun_get_users():
     return await get_users_service()
         
+# Ruta para actualizar un usuario por id
+@app.put("/api/v1/users/{user_id}", )
+async def fun_update_user(user_id: int, update: UpdateUser):
+    return await update_user_service(user_id,update)
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

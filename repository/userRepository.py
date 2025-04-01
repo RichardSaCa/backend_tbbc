@@ -54,11 +54,11 @@ async def get_users():
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    # SQL para obtener todas las frutas registradas
+    # SQL para obtener todas los user registrados
     select_query = "SELECT u.id as id, u.name as name, u.phone as phone, u.email as email FROM users u order by u.name asc"
     
     try:
-        # Ejecutar la consulta para obtener todas las frutas
+        # Ejecutar la consulta para obtener todas los users
         cursor.execute(select_query)
         users = cursor.fetchall()  # Obtener todos los resultados
 
@@ -68,6 +68,33 @@ async def get_users():
         return Users(users=user_list)
     except Error as e:
         raise HTTPException(status_code=400, detail=f"Error al obtener los users: {e}")
+    finally:
+        cursor.close()
+        connection.close()  
+        
+#actualizar a un usuario
+async def update_user(user_id: int, update: UpdateUser):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # SQL para actualizar el nombre del user
+    update_query = """
+        UPDATE users SET name = %s, phone = %s, email = %s WHERE id = %s 
+    """
+    
+    try:
+        # Ejecutar la consulta de actualización
+        cursor.execute(update_query, (update.name, update.phone, update.email, user_id))
+        connection.commit()
+
+        # Verificar si user fue actualizada (si no, user no existe)
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="User no encontrado")
+
+        return {"message": "User actualizado con éxito"}
+    except Error as e:
+        connection.rollback()  # Hacer rollback en caso de error
+        raise HTTPException(status_code=400, detail=f"Error al actualizar user: {e}")
     finally:
         cursor.close()
         connection.close()  
