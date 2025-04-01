@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 #importar modelos
 from models.userModel import User,UpdateUser,createUser,Users
 #importar servicios
-from services.userService import register_user_service, get_users_service, update_user_service
+from services.userService import register_user_service, get_users_service, update_user_service, delete_user_service
     
 
 app = FastAPI(debug=True)
@@ -37,7 +37,11 @@ async def fun_get_users():
 async def fun_update_user(user_id: int, update: UpdateUser):
     return await update_user_service(user_id,update)
 
-
+# Ruta para eliminar un user por su ID
+@app.delete("/api/v1/users/{users_id}")
+async def fun_delete_user(users_id: int):
+    return await delete_user_service(users_id)
+       
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
     

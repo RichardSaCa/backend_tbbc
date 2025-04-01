@@ -98,3 +98,29 @@ async def update_user(user_id: int, update: UpdateUser):
     finally:
         cursor.close()
         connection.close()  
+        
+        
+async def delete_user(user_id: int):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # SQL para eliminar la user
+    delete_query = """
+        DELETE FROM users WHERE id = %s
+    """
+    try:
+        # Ejecutar la consulta de eliminación
+        cursor.execute(delete_query, (user_id,))
+        connection.commit()
+
+        # Verificar si user fue eliminado (si no, el user no existe)
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="User no encontrado")
+
+        return {"message": "User eliminado con éxito"}
+    except Error as e:
+        connection.rollback()  # Hacer rollback en caso de error
+        raise HTTPException(status_code=400, detail=f"Error al eliminar el user: {e}")
+    finally:
+        cursor.close()
+        connection.close()
