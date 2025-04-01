@@ -18,10 +18,10 @@
 
 1. Se debe crear un archivo .env para la base base de datos con la siguiente informacion:
 
-	MYSQL_HOST=host de base de datos
-	MYSQL_USER=usuario
-	MYSQL_PASSWORD=contraseña
-	MYSQL_DATABASE=nombre de base de datos
+	- MYSQL_HOST=host de base de datos
+	- MYSQL_USER=usuario
+	- MYSQL_PASSWORD=contraseña
+	- MYSQL_DATABASE=nombre de base de datos
 
 1. La base de datos contiene una tabla:
 

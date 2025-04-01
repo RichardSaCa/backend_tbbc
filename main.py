@@ -15,6 +15,7 @@ app = FastAPI(debug=True)
 # para evitar problemas de cors
 origins = [
     "http://3.148.114.153:8085",
+    "http://localhost:5173"
     # Add more origins here
 ]
 
